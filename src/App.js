@@ -1,28 +1,35 @@
-import React, { Component } from 'react';
-import logo from './logo.svg';
-import './App.css';
+import React, { Component } from 'react'
+import Movie from './Movie'
+import './App.css'
 
 class App extends Component {
+  state = {
+    movies: [],
+  }
+
+  async componentDidMount() {
+    try {
+      const res = await fetch('http://www.omdbapi.com/?s=Batman&page=1&apikey=7b858b1c')
+      const { Search: movies } = await res.json()
+      this.setState({ movies })
+    } catch (err) {
+      console.log(err)
+    }
+  }
+
   render() {
+    const { movies } = this.state
     return (
       <div className="App">
         <header className="App-header">
-          <img src={logo} className="App-logo" alt="logo" />
-          <p>
-            Edit <code>src/App.js</code> and save to reload.
-          </p>
-          <a
-            className="App-link"
-            href="https://reactjs.org"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Learn React
-          </a>
+          <h1>App</h1>
         </header>
+        <div className="spacing">
+          {movies.map(movie => <Movie movie={movie} key={movie.imdbID} />)}
+        </div>
       </div>
     );
   }
 }
 
-export default App;
+export default App
